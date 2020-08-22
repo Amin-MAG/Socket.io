@@ -1,0 +1,19 @@
+<script>
+
+    let ws = new WebSocket("ws:localhost:3000");
+    console.log(ws);
+
+    // Send Message To Server
+
+    ws.onopen = (event) => { 
+        ws.send("This message is from one of client to the server!");
+    };
+
+    // Listener For Recieving
+
+    ws.onmessage = (event) => {
+        console.log(event);
+        console.log("Message: " + event.data);
+    };
+
+</script>
