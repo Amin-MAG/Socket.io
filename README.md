@@ -1,2 +1,2 @@
 # WebSocket
-Learning Socket.io using NodeJs. 
+Learning WebSocket, Socket.io using NodeJs. 
