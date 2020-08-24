@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link rel="stylesheet" href="css/style.css">
+
+<div class="container mt-5">
+    <!-- Form -->
+    <form id="message-form">
+        <div class="form-group">
+            <div class="row">
+                <input style="width: 100%;" id="user-message" type="text" placeholder="Enter your message..."/>
+            </div>
+            <div class="row">
+                <input class="btn btn-primary mt-2" style="width: 100%;" type="submit" value="Send"/>
+            </div>
+        </div>
+    </form>
+    <!-- Messages -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 mt-4" style="text-align: center">
+            <ul id="messages" class="list-group">
+            </ul>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="script/script.js"></script>
