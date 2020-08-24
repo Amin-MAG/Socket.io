@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<script src="/socket.io/socket.io.js"></script>
+
+<div class="container mt-5">
+    <!-- Form -->
+    <form id="message-form">
+        <div class="form-group">
+            <div class="row">
+                <input style="width: 100%;" id="user-message" type="text" placeholder="Enter your message..."/>
+            </div>
+            <div class="row">
+                <input class="btn btn-primary mt-2" style="width: 100%;" type="submit" value="Send"/>
+            </div>
+        </div>
+    </form>
+    <!-- Messages -->
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10 mt-4" style="text-align: center">
+            <ul id="messages" class="list-group">
+            </ul>
+        </div>
+        <div class="col-1"></div>
+    </div>
+
+</div>
+
+<style>
+
+    #messages li:nth-child(odd) {
+        background-color: azure;
+    }
+
+</style>
+
+<script>
+
+    const socket = io('http://localhost:8000');
+
+    socket.on('connect', (data) => {
+
+    });
+
+    // socket.on('data_from_server', (data) => {
+    //     console.log(data);
+    //     socket.emit("data_from_client", {
+    //         data: "Data from client!"
+    //     });
+    // });
+
+    socket.on('new_message_to_clients', (data) => {
+        console.log(data)
+        document.querySelector('#messages').innerHTML += `<li class="list-group-item"><p>${data.text}</p></li>`;
+    });
+
+    document.querySelector("#message-form").addEventListener('submit', (event) => {
+        event.preventDefault();
+        const msg = document.querySelector('#user-message').value;
+        socket.emit('new_message_to_server', {
+            text: msg
+        });
+    });
+
+    // socket.on('ping', () => {
+    //     console.log("Ping was received from the server!");
+    // });
+    //
+    // socket.on('pong', (latency) => {
+    //     console.log(latency);
+    //     console.log("Pong was sent to the server!")
+    // });
+
+</script>
