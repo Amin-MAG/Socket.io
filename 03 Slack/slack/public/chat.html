@@ -1,0 +1,48 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+      integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="css/styles.css">
+<script src="https://kit.fontawesome.com/1927e73da1.js" crossorigin="anonymous"></script>
+
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="pt-2 col-1 namespaces">
+            <!-- JS will update this dynamically!! -->
+        </div>
+
+        <div class="col-3 rooms">
+            <h3 class="mt-4">Rooms</h3>
+            <ul class="room-list">
+                <!-- JS will update this dynamically!! -->
+            </ul>
+        </div>
+
+        <div class="chat-panel col-8">
+            <div class="room-header row">
+                <div class="col-6">
+                    <span class="curr-room-text">Current Room</span>
+                    <span class="ml-1 curr-room-num-users"></span>
+                    <i class="fas fa-user curr-room-num-users"></i>
+                </div>
+                <div class="col-6 search pull-right">
+                    <span><i class="fas fa-search"></i></span>
+                    <input type="text" id="search-box" placeholder="Search"/>
+                </div>
+            </div>
+            <div class="message-form">
+                <form id="user-input">
+                    <input id="user-message" type="text" placeholder="Enter your message"/>
+                </form>
+            </div>
+            <ul id="messages" class="row mt-5">
+                <!-- Here is room's messages -->
+                <!-- JS will update this dynamically!! -->
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="script/scripts.js"></script>
+<script src="script/joinNamespace.js"></script>
+<script src="script/joinRoom.js"></script>
