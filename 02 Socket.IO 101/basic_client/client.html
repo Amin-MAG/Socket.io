@@ -1,0 +1,22 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+
+<script>
+
+    const socket = io('http://localhost:8000');
+
+    console.log(socket);
+
+
+    socket.on('connect', (data) => {
+        // Listener For Receiving
+        socket.on('welcome', (message) => {
+            console.log(message);
+        });
+        // Send Message To Server
+        socket.emit('client_message', {
+            data: "This is a message that one of client sent to the server."
+        });
+    });
+
+
+</script>
