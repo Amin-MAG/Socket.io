@@ -1,9 +1,8 @@
 const socket = io('http://localhost:8000');
-let nsSocket = "";
+let nsSocket = undefined;
 
 // Listen for namespace's List
 socket.on('nsList', (nsData) => {
-    console.log("The list of namespaces has been arrived.");
     // Update namespaces
     let namespacesDiv = document.querySelector('.namespaces');
     namespacesDiv.innerHTML = "";
@@ -15,8 +14,9 @@ socket.on('nsList', (nsData) => {
     Array.from(document.getElementsByClassName('namespace')).forEach((element) => {
         element.addEventListener('click', (e) => {
             const endpoint = element.getAttribute('ns');
-            console.log(`Change the namespace to the ${endpoint}`);
+            joinNamespace(endpoint);
         });
     });
+    // As the first page namespace
     joinNamespace('/wiki');
 });

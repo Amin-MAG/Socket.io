@@ -1,8 +1,15 @@
 function joinNamespace(endpoint) {
+    // Check if it is in a namespace if it is then close  (**)
+    if (nsSocket) {
+        // Remove Socket
+        // ?!
+        nsSocket.close();
+        // Remove event listener
+        document.querySelector('#user-input').removeEventListener('submit', formSubmission);
+    }
     // Listen for namespace details
     nsSocket = io(`http://localhost:8000${endpoint}`);
     nsSocket.on('nsRooms', (nsRooms) => {
-        console.log("Rooms' list has been received.")
         // Update rooms
         let roomsListDiv = document.querySelector('.room-list');
         roomsListDiv.innerHTML = ""
@@ -15,37 +22,40 @@ function joinNamespace(endpoint) {
         let roomNodes = document.getElementsByClassName('room');
         Array.from(roomNodes).forEach((element) => {
             element.addEventListener('click', (e) => {
-                console.log(`Some one clicked on ${e.target.innerText} room.`);
+                let roomName = e.target.innerText;
+                joinRoom(roomName);
             });
         });
-        // Grab the first room
+        // Grab the first room as default value for room
         const topRoomName = document.querySelector('.room').innerText;
         joinRoom(topRoomName);
     });
     // Listen for new messages from server
     nsSocket.on('message_to_clients', (data) => {
-        console.log(data.text);
         let newMessage = buildNewMessage(data);
         let messagesDiv = document.querySelector('#messages');
         messagesDiv.innerHTML += newMessage;
+        messagesDiv.scrollTo(0, messagesDiv.scrollHeight);
     });
     // Set on submit to send message to the server
-    document.querySelector('.message-form').addEventListener('submit', (e) => {
-        console.log("Submmited: Some message has been sent to server.")
-        e.preventDefault();
-        const inputMessageElement = document.querySelector('#user-message');
-        const message = inputMessageElement.value;
-        inputMessageElement.value = "";
-        nsSocket.emit('message_to_server', {
-            text: message,
-            username: "rbunch"
-        });
+    document.querySelector('.message-form').addEventListener('submit', formSubmission);
+}
+
+function formSubmission(e) {
+    e.preventDefault();
+    const inputMessageElement = document.querySelector('#user-message');
+    const message = inputMessageElement.value;
+    inputMessageElement.value = "";
+    nsSocket.emit('message_to_server', {
+        text: message,
+        username: "rbunch"
     });
 }
 
+
 function buildNewMessage(data) {
     return `
-           <li class="col-12">
+           <li class="message_item col-12">
                     <div class="user-image">
                         <img src="${data.avatar}"/>
                     </div>

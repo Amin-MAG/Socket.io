@@ -30,24 +30,28 @@ io.on('connect', (socket, req) => {
 // Iterate and listen for connection
 channels.forEach((namespace) => {
     io.of(namespace.endpoint).on('connect', (nsSocket) => {
-        console.log(`${nsSocket.id} has joined ${namespace.title}`);
         // Socket connected so send the namespace details
-        nsSocket.emit('nsRooms', channels[0].rooms);
+        nsSocket.emit('nsRooms', namespace.rooms);
         // Listen for user request to join to a room
         nsSocket.on('join_room', (roomName, getDataCallback) => {
-            console.log(`User has been joined to the ${roomName}`);
+            // Grab the first room as default value for room
+            let roomToLeave = Object.keys(nsSocket.rooms)[1];
+            // Left current room first (**)
+            nsSocket.leave(roomToLeave);
+            updateUsersInRoom(namespace, roomToLeave);
             // Join to the room
             nsSocket.join(roomName);
-            // Callback that update room and user count
-            io.of('/wiki').to(roomName).clients((err, clients) => {
-                getDataCallback({
-                    numberOfUsers: clients.length,
-                });
+            // Fetch histories from server each time someone join
+            const nsRoom = namespace.rooms.find((room) => {
+                return room.title === roomName;
             });
+            nsSocket.emit('room_histories', nsRoom.chat_history);
+            // Update number of members online in the room
+            updateUsersInRoom(namespace, roomName);
         });
         // Received messages from the server
         nsSocket.on('message_to_server', (data) => {
-            console.log("Received a message from client.")
+            // Provide full data in the server
             let fullData = {
                 text: data.text,
                 username: data.username,
@@ -56,11 +60,13 @@ channels.forEach((namespace) => {
             }
             // Send this message to the all of the clients in this room
             let roomTitle = Object.keys(nsSocket.rooms)[1];
-            const nsRoom = channels[0].rooms.find((room) => {
+            const nsRoom = namespace.rooms.find((room) => {
                 return room.title === roomTitle;
             });
-            nsRoom.addMessage(fullData);
-            io.of('/wiki').to(roomTitle).emit('message_to_clients', fullData);
+            if (nsRoom) {
+                nsRoom.addMessage(fullData);
+            }
+            io.of(namespace.endpoint).to(roomTitle).emit('message_to_clients', fullData);
         });
     });
 });
@@ -75,4 +81,13 @@ function getTime() {
     minutes = minutes < 10 ? '0' + minutes : minutes;
 
     return hours + ':' + minutes + ' ' + ampm;
+}
+
+function updateUsersInRoom(namespace, roomName) {
+    io.of(namespace.endpoint).to(roomName).clients((err, clients) => {
+        io.of(namespace.endpoint).to(roomName).emit('update_chatroom', {
+            roomName,
+            numberOfUsers: clients.length,
+        });
+    });
 }
