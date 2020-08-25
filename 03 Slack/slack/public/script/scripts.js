@@ -1,3 +1,6 @@
+// Prompt to get the username
+const username = prompt("Please enter your username.");
+// const socket = io('http://localhost:8000');
 const socket = io('http://localhost:8000');
 let nsSocket = undefined;
 

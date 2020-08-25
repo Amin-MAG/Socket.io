@@ -30,7 +30,8 @@ io.on('connect', (socket, req) => {
 // Iterate and listen for connection
 channels.forEach((namespace) => {
     io.of(namespace.endpoint).on('connect', (nsSocket) => {
-        // Socket connected so send the namespace details
+        const username = nsSocket.handshake.query.username;
+         // Socket connected so send the namespace details
         nsSocket.emit('nsRooms', namespace.rooms);
         // Listen for user request to join to a room
         nsSocket.on('join_room', (roomName, getDataCallback) => {
@@ -54,7 +55,7 @@ channels.forEach((namespace) => {
             // Provide full data in the server
             let fullData = {
                 text: data.text,
-                username: data.username,
+                username,
                 time: getTime(),
                 avatar: 'https://via.placeholder.com/30',
             }

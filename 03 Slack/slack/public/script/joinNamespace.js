@@ -8,7 +8,11 @@ function joinNamespace(endpoint) {
         document.querySelector('#user-input').removeEventListener('submit', formSubmission);
     }
     // Listen for namespace details
-    nsSocket = io(`http://localhost:8000${endpoint}`);
+    nsSocket = io(`http://localhost:8000${endpoint}`, {
+        query: {
+            username,
+        },
+    });
     nsSocket.on('nsRooms', (nsRooms) => {
         // Update rooms
         let roomsListDiv = document.querySelector('.room-list');
@@ -48,7 +52,6 @@ function formSubmission(e) {
     inputMessageElement.value = "";
     nsSocket.emit('message_to_server', {
         text: message,
-        username: "rbunch"
     });
 }
 

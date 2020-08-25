@@ -24,7 +24,6 @@ function joinRoom(roomName) {
     // Search box
     let searchElement = document.querySelector('#search-box');
     searchElement.addEventListener('input', (e) => {
-        console.log(e.target.value);
         // Search stuff
         let messages = Array.from(document.getElementsByClassName('message_item'));
         messages.forEach((message) => {
